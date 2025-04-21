@@ -1,0 +1,135 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Press Start 2P', cursive;
+  background-color: #000;
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+h1 {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  letter-spacing: 2px;
+}
+
+.subtitle {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 15px;
+}
+
+.game-status {
+  font-size: 0.9rem;
+  color: #fff;
+  margin-top: 10px;
+}
+
+.game-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+.board {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px;
+  background-color: #fff;
+  padding: 2px;
+  margin-bottom: 20px;
+  width: 300px;
+  height: 300px;
+}
+
+.cell {
+  background-color: #000;
+  aspect-ratio: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 2.5rem;
+  position: relative;
+}
+
+.mark {
+  position: absolute;
+  color: #fff;
+}
+
+.mark.X {
+  color: #ff4444;
+}
+
+.mark.O {
+  color: #4444ff;
+}
+
+.cell.flashing .mark {
+  animation: flash 0.5s step-end infinite;
+}
+
+@keyframes flash {
+  50% { opacity: 0; }
+}
+
+.restart-btn {
+  font-family: 'Press Start 2P', cursive;
+  background-color: #000;
+  color: #fff;
+  border: 2px solid #fff;
+  padding: 15px 30px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.restart-btn:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.rules-section {
+  text-align: center;
+  margin-top: 40px;
+  padding: 20px;
+  border: 2px solid #333;
+}
+
+.rules-section h2 {
+  margin-bottom: 20px;
+  font-size: 1.2rem;
+}
+
+.rules-content ul {
+  list-style: none;
+  text-align: left;
+  display: inline-block;
+}
+
+.rules-content li {
+  font-size: 0.7rem;
+  margin-bottom: 10px;
+  color: #888;
+  line-height: 1.4;
+}

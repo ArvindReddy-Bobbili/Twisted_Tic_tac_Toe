@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tic Tac Toe with Twist</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script
+      src="https://unpkg.com/react@17/umd/react.development.js"
+      crossorigin
+    ></script>
+    <script
+      src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"
+      crossorigin
+    ></script>
+    <script src="https://unpkg.com/babel-standalone@6.26.0/babel.min.js"></script>
+    <script type="text/babel">
+      const { useState, useEffect } = React;
+      const winningCombos = [
+        [0, 1, 2],
+        [3, 4, 5],
+        [6, 7, 8],
+        [0, 3, 6],
+        [1, 4, 7],
+        [2, 5, 8],
+        [0, 4, 8],
+        [2, 4, 6],
+      ];
+
+      function App() {
+        const [board, setBoard] = useState(Array(9).fill(""));
+        const [currentPlayer, setCurrentPlayer] = useState("X");
+        const [moves, setMoves] = useState({ X: [], O: [] });
+        const [flashIndex, setFlashIndex] = useState({ X: null, O: null });
+        const [gameOver, setGameOver] = useState(false);
+        const [winner, setWinner] = useState(null);
+        const [showRules, setShowRules] = useState(false);
+
+        useEffect(() => {
+          if (!gameOver && moves[currentPlayer].length === 3) {
+            setFlashIndex({
+              ...flashIndex,
+              [currentPlayer]: moves[currentPlayer][0],
+            });
+          } else {
+            setFlashIndex({ ...flashIndex, [currentPlayer]: null });
+          }
+        }, [currentPlayer, moves]);
+
+        const handleClick = (idx) => {
+          if (gameOver || flashIndex[currentPlayer] === idx || board[idx])
+            return;
+          let newBoard = [...board];
+          let newMoves = { ...moves };
+          if (newMoves[currentPlayer].length < 3) {
+            newBoard[idx] = currentPlayer;
+            newMoves[currentPlayer] = [...newMoves[currentPlayer], idx];
+          } else {
+            const old = newMoves[currentPlayer][0];
+            newBoard[old] = "";
+            newMoves[currentPlayer] = [
+              ...newMoves[currentPlayer].slice(1),
+              idx,
+            ];
+            newBoard[idx] = currentPlayer;
+          }
+          setBoard(newBoard);
+          setMoves(newMoves);
+          if (
+            winningCombos.some((c) =>
+              c.every((i) => newBoard[i] === currentPlayer)
+            )
+          ) {
+            setGameOver(true);
+            setWinner(currentPlayer);
+            return;
+          }
+          if (newBoard.every((c) => c)) {
+            setGameOver(true);
+            return;
+          }
+          setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
+        };
+
+        const reset = () => {
+          setBoard(Array(9).fill(""));
+          setCurrentPlayer("X");
+          setMoves({ X: [], O: [] });
+          setFlashIndex({ X: null, O: null });
+          setGameOver(false);
+          setWinner(null);
+        };
+
+        return (
+          <div className="container">
+            <header>
+              <h1>TIC-TAC-TOE!</h1>
+              <p className="subtitle">But.. there's always a winner!</p>
+              <p className="game-status">
+                {winner 
+                  ? `Player ${winner} wins!` 
+                  : gameOver 
+                    ? "It's a tie!" 
+                    : `Player ${currentPlayer}'s turn`
+                }
+              </p>
+            </header>
+
+            <div className="game-section">
+              <div className="board">
+                {board.map((v, i) => (
+                  <div
+                    key={i}
+                    className={`cell ${
+                      flashIndex[currentPlayer] === i ? "flashing" : ""
+                    }`}
+                    onClick={() => handleClick(i)}
+                  >
+                    {v && <span className={`mark ${v}`}>{v}</span>}
+                  </div>
+                ))}
+              </div>
+
+              <button className="restart-btn" onClick={reset}>
+                RESTART
+              </button>
+            </div>
+
+            <div className="rules-section">
+              <h2>RULES</h2>
+              <div className="rules-content">
+                <ul>
+                  <li>1. Players take turns placing X or O </li>
+                  <li>2. Maximum 3 marks per player on board</li>
+                  <li>3. 4th mark removes oldest mark</li>
+                  <li>4. Get 3 in a row to win!</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        );
+      }
+      ReactDOM.render(<App />, document.getElementById("root"));
+    </script>
+  </body>
+</html>
